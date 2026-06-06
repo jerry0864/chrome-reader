@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>阅读 — Epub Reader</title>
+  <link rel="stylesheet" href="reader.css">
+</head>
+<body class="theme-light">
+
+  <!-- Top toolbar -->
+  <div id="toolbar" class="toolbar">
+    <button id="btn-back" class="toolbar-btn" title="返回书库">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
+    <div class="toolbar-title" id="chapter-title"></div>
+    <div class="toolbar-right">
+      <button id="btn-toc" class="toolbar-btn" title="目录">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/>
+        </svg>
+      </button>
+      <button id="btn-settings" class="toolbar-btn" title="设置">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- TOC panel -->
+  <div id="toc-panel" class="side-panel hidden">
+    <div class="panel-header">
+      <span>目录</span>
+      <button class="panel-close" id="toc-close">✕</button>
+    </div>
+    <div id="toc-list" class="toc-list"></div>
+  </div>
+
+  <!-- Settings panel -->
+  <div id="settings-panel" class="side-panel hidden">
+    <div class="panel-header">
+      <span>阅读设置</span>
+      <button class="panel-close" id="settings-close">✕</button>
+    </div>
+    <div class="settings-body">
+
+      <label class="setting-label">主题</label>
+      <div class="theme-swatches" id="theme-swatches">
+        <button data-theme="light" class="swatch swatch-light active" title="白色">A</button>
+        <button data-theme="sepia" class="swatch swatch-sepia" title="米黄">A</button>
+        <button data-theme="green" class="swatch swatch-green" title="深绿护眼">A</button>
+        <button data-theme="dark" class="swatch swatch-dark" title="深色">A</button>
+        <button data-theme="ink" class="swatch swatch-ink" title="深墨">A</button>
+      </div>
+
+      <label class="setting-label">字号 <span id="font-size-val">18</span>px</label>
+      <input type="range" id="font-size" min="12" max="32" step="1" value="18" class="slider">
+
+      <label class="setting-label">字体</label>
+      <select id="font-family" class="select">
+        <option value="Georgia">Georgia（衬线）</option>
+        <option value="'Noto Serif SC', serif">Noto Serif（中文衬线）</option>
+        <option value="'PingFang SC', 'Microsoft YaHei', sans-serif">苹方 / 微软雅黑</option>
+        <option value="'Lora', serif">Lora（英文衬线）</option>
+        <option value="'Open Sans', sans-serif">Open Sans（无衬线）</option>
+      </select>
+
+    </div>
+  </div>
+
+  <!-- Reading area -->
+  <div id="reader-wrap">
+    <div id="reader-area"></div>
+
+  </div>
+
+  <!-- Bottom progress bar -->
+  <div id="bottom-bar" class="bottom-bar">
+    <div id="progress-bar" class="progress-track">
+      <div id="progress-fill" class="progress-fill" style="width:0%"></div>
+    </div>
+    <div id="progress-label" class="progress-label">0%</div>
+  </div>
+
+  <div id="loading" class="loading-overlay">
+    <div class="spinner"></div>
+    <p>正在打开书籍...</p>
+  </div>
+
+  <script src="../lib/jszip.min.js"></script>
+  <script src="../lib/epub.min.js"></script>
+  <script src="../lib/fflate.umd.js"></script>
+  <script type="module" src="reader.js"></script>
+</body>
+</html>

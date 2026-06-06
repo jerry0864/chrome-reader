@@ -1,0 +1,17 @@
+{
+  "name": "Epub Reader",
+  "short_name": "Epub Reader",
+  "start_url": "/bookshelf/bookshelf.html",
+  "display": "standalone",
+  "background_color": "#f4f4f5",
+  "theme_color": "#6366f1",
+  "icons": [
+    { "src": "../icons/icon128.png", "sizes": "128x128", "type": "image/png" }
+  ],
+  "file_handlers": [
+    {
+      "action": "/bookshelf/bookshelf.html",
+      "accept": { "application/epub+zip": [".epub"] }
+    }
+  ]
+}
