@@ -22,6 +22,10 @@ const progressLabel = document.getElementById('progress-label');
 const themeSwatches = document.getElementById('theme-swatches');
 const fontSizeSlider = document.getElementById('font-size');
 const fontSizeVal = document.getElementById('font-size-val');
+const lineHeightSlider = document.getElementById('line-height');
+const lineHeightVal = document.getElementById('line-height-val');
+const letterSpacingSlider = document.getElementById('letter-spacing');
+const letterSpacingVal = document.getElementById('letter-spacing-val');
 const fontFamilySelect = document.getElementById('font-family');
 
 let reader = null;
@@ -140,6 +144,10 @@ function buildToc(toc) {
 function loadSettingsUI() {
   fontSizeSlider.value = settings.fontSize;
   fontSizeVal.textContent = settings.fontSize;
+  lineHeightSlider.value = settings.lineHeight;
+  lineHeightVal.textContent = settings.lineHeight;
+  letterSpacingSlider.value = settings.letterSpacing;
+  letterSpacingVal.textContent = settings.letterSpacing;
   fontFamilySelect.value = settings.fontFamily;
   document.querySelectorAll('[data-theme]').forEach(b => {
     b.classList.toggle('active', b.dataset.theme === settings.theme);
@@ -183,6 +191,18 @@ function setupUI() {
   fontSizeSlider.addEventListener('input', () => {
     fontSizeVal.textContent = fontSizeSlider.value;
     updateSettings({ fontSize: parseInt(fontSizeSlider.value, 10) });
+  });
+
+  lineHeightSlider.addEventListener('input', () => {
+    const lh = parseFloat(lineHeightSlider.value);
+    lineHeightVal.textContent = lh.toFixed(1);
+    updateSettings({ lineHeight: lh });
+  });
+
+  letterSpacingSlider.addEventListener('input', () => {
+    const ls = parseFloat(letterSpacingSlider.value);
+    letterSpacingVal.textContent = ls;
+    updateSettings({ letterSpacing: ls });
   });
 
   fontFamilySelect.addEventListener('change', () => {

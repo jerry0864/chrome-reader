@@ -321,11 +321,11 @@ export class ScrollRenderer {
 
   onLocationChange(cb) { this._locationCb = cb; }
 
-  applySettings({ fontSize, fontFamily, theme } = {}) {
-    this._applyTheme({ theme, fontSize, fontFamily });
+  applySettings({ fontSize, fontFamily, lineHeight, letterSpacing, theme } = {}) {
+    this._applyTheme({ theme, fontSize, fontFamily, lineHeight, letterSpacing });
   }
 
-  _applyTheme({ theme, fontSize, fontFamily } = {}) {
+  _applyTheme({ theme, fontSize, fontFamily, lineHeight, letterSpacing } = {}) {
     const colors = THEME[theme] || THEME.light;
     if (this._element) {
       this._element.style.background = colors.bg;
@@ -334,6 +334,8 @@ export class ScrollRenderer {
     if (this._container) {
       if (fontSize)   this._container.style.fontSize   = fontSize + 'px';
       if (fontFamily) this._container.style.fontFamily = fontFamily + ', serif';
+      if (lineHeight) this._container.style.lineHeight = lineHeight;
+      if (letterSpacing != null) this._container.style.letterSpacing = letterSpacing + 'px';
       this._container.style.color = colors.fg;
     }
   }

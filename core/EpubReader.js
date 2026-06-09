@@ -117,16 +117,17 @@ export class EpubReader extends BookReader {
       return;
     }
     if (!this._rendition) return;
-    const { fontSize, fontFamily, theme } = settings;
+    const { fontSize, fontFamily, lineHeight, letterSpacing, theme } = settings;
     const colors = THEME_COLORS[theme] || THEME_COLORS.light;
     this._rendition.themes.default({
       body: {
-        'font-size':   `${fontSize}px !important`,
-        'font-family': `${fontFamily}, serif !important`,
-        'background':  `${colors.background} !important`,
-        'color':       `${colors.color} !important`,
-        'line-height': '1.7 !important',
-        'padding':     '0 2em !important',
+        'font-size':      `${fontSize}px !important`,
+        'font-family':    `${fontFamily}, serif !important`,
+        'background':     `${colors.background} !important`,
+        'color':          `${colors.color} !important`,
+        'line-height':    `${lineHeight || 1.7} !important`,
+        'letter-spacing': `${letterSpacing || 0}px !important`,
+        'padding':        '0 2em !important',
       }
     });
   }

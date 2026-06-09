@@ -1,6 +1,8 @@
 const DEFAULTS = {
   fontSize: 18,
   fontFamily: 'Georgia',
+  lineHeight: 1.7,
+  letterSpacing: 0,
   theme: 'light',
   readingMode: 'scroll',
 };

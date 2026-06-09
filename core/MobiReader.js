@@ -265,7 +265,7 @@ export class MobiReader extends BookReader {
     };
   }
 
-  applySettings({ fontSize, fontFamily, theme } = {}) {
+  applySettings({ fontSize, fontFamily, lineHeight, letterSpacing, theme } = {}) {
     const THEME = {
       light: { bg: '#ffffff', fg: '#1a1a1a' },
       dark:  { bg: '#1a1a1a', fg: '#d4d4d4' },
@@ -279,6 +279,8 @@ export class MobiReader extends BookReader {
     if (this._container) {
       if (fontSize)   this._container.style.fontSize   = fontSize + 'px';
       if (fontFamily) this._container.style.fontFamily = fontFamily + ', serif';
+      if (lineHeight) this._container.style.lineHeight = lineHeight;
+      if (letterSpacing != null) this._container.style.letterSpacing = letterSpacing + 'px';
       this._container.style.color = c.fg;
     }
   }

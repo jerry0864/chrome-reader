@@ -13,7 +13,7 @@ export class BookReader {
   // Returns current location: { cfi, scrollPercent, chapter, chapterTitle }
   async getCurrentLocation() { throw new Error('Not implemented'); }
 
-  // Applies display settings: { fontSize, fontFamily, theme }
+  // Applies display settings: { fontSize, fontFamily, lineHeight, letterSpacing, theme }
   applySettings(settings) { throw new Error('Not implemented'); }
 
   // Go to previous page/section
