@@ -5,6 +5,7 @@ const DEFAULTS = {
   letterSpacing: 0,
   theme: 'light',
   readingMode: 'scroll',
+  titleMode: 'chinese', // 'chinese' | 'pinyin' — 标签页标题显示语言
 };
 
 export const SettingsStore = {

@@ -26,12 +26,19 @@
       </svg>
       我的书库
     </h1>
-    <button id="btn-add" class="btn-primary">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-      </svg>
-      添加书籍
-    </button>
+    <div class="header-actions">
+      <label class="pinyin-toggle" title="标签页与书名显示为拼音">
+        <input type="checkbox" id="toggle-pinyin">
+        <span class="pinyin-toggle-track"></span>
+        <span class="pinyin-toggle-label">拼音标题</span>
+      </label>
+      <button id="btn-add" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        添加书籍
+      </button>
+    </div>
   </header>
 
   <main>
@@ -50,6 +57,7 @@
   <script src="../lib/jszip.min.js"></script>
   <script src="../lib/epub.min.js"></script>
   <script src="../lib/fflate.umd.js"></script>
+  <script src="../lib/pinyin-pro.js"></script>
   <script type="module" src="bookshelf.js"></script>
 </body>
 </html>

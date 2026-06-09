@@ -1,18 +1,44 @@
 import { BookStore } from '../core/BookStore.js';
+import { SettingsStore } from '../core/SettingsStore.js';
+import { displayTitle } from '../core/pinyin.js';
 
 const grid        = document.getElementById('book-grid');
 const emptyState  = document.getElementById('empty-state');
 const btnAdd      = document.getElementById('btn-add');
 const fileInput   = document.getElementById('file-input');
 const dropOverlay = document.getElementById('drop-overlay');
+const togglePinyin = document.getElementById('toggle-pinyin');
+
+let titleMode = 'chinese';
 
 async function init() {
   // Auto-import when opened via ?serve= (epub-server.js path)
   const served = await handleServeParam();
   if (served) return;
 
+  ({ titleMode } = await SettingsStore.get());
+  togglePinyin.checked = titleMode === 'pinyin';
+  setupPinyinToggle();
+
   await renderShelf();
   setupDragDrop();
+}
+
+function setupPinyinToggle() {
+  togglePinyin.addEventListener('change', async () => {
+    titleMode = togglePinyin.checked ? 'pinyin' : 'chinese';
+    await SettingsStore.set({ titleMode });
+    await renderShelf();
+  });
+
+  // 其它标签页（阅读页）切换时保持同步；本页自身写入已更新过 titleMode，此处会因值相同而跳过，避免重复渲染
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area !== 'sync' || !changes.titleMode) return;
+    if (titleMode === changes.titleMode.newValue) return;
+    titleMode = changes.titleMode.newValue;
+    togglePinyin.checked = titleMode === 'pinyin';
+    renderShelf();
+  });
 }
 
 // Called when Windows file association opens Chrome with ?serve=...&name=...
@@ -79,10 +105,12 @@ function createCard(book, progress) {
     ? `<img class="book-cover" src="${book.coverDataUrl}" alt="">`
     : `<div class="book-cover-placeholder">📖</div>`;
 
+  const shownTitle = displayTitle(book.title, titleMode);
+
   card.innerHTML = `
     ${coverHtml}
     <div class="book-info">
-      <div class="book-title" title="${escHtml(book.title)}">${escHtml(book.title)}</div>
+      <div class="book-title" title="${escHtml(shownTitle)}">${escHtml(shownTitle)}</div>
       <div class="book-author">${escHtml(book.author)}</div>
       <div class="book-progress"><div class="book-progress-bar" style="width:${Math.round(progress * 100)}%"></div></div>
     </div>
@@ -96,7 +124,7 @@ function createCard(book, progress) {
 
   card.querySelector('.btn-delete').addEventListener('click', async (e) => {
     e.stopPropagation();
-    if (confirm(`删除《${book.title}》？`)) {
+    if (confirm(`删除《${displayTitle(book.title, titleMode)}》？`)) {
       await BookStore.deleteBook(book.id);
       await renderShelf();
     }

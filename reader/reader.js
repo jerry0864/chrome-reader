@@ -1,6 +1,7 @@
 import { BookStore } from '../core/BookStore.js';
 import { SettingsStore } from '../core/SettingsStore.js';
 import { createReader } from '../core/ReaderFactory.js';
+import { displayTitle } from '../core/pinyin.js';
 import { initNoteSaver } from './note-saver.js';
 
 const params = new URLSearchParams(location.search);
@@ -27,10 +28,26 @@ const lineHeightVal = document.getElementById('line-height-val');
 const letterSpacingSlider = document.getElementById('letter-spacing');
 const letterSpacingVal = document.getElementById('letter-spacing-val');
 const fontFamilySelect = document.getElementById('font-family');
+const titleModeSelect = document.getElementById('title-mode');
 
 let reader = null;
 let settings = null;
 let saveTimer = null;
+let bookTitle = '';  // 原始（中文）书名，用于笔记保存与标题显示
+
+const TITLE_SUFFIX = ' — Epub Reader';
+
+function applyDocTitle() {
+  document.title = displayTitle(bookTitle, settings?.titleMode) + TITLE_SUFFIX;
+}
+
+// 跨标签页同步：在书架或另一阅读页切换全局开关时，实时更新本页标题与设置项
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area !== 'sync' || !changes.titleMode || !settings) return;
+  settings.titleMode = changes.titleMode.newValue;
+  if (titleModeSelect) titleModeSelect.value = settings.titleMode;
+  applyDocTitle();
+});
 
 async function init() {
   if (!bookId) { showError('未指定书籍'); return; }
@@ -63,7 +80,8 @@ async function init() {
   reader = createReader(book.fileName);
   try {
     const meta = await reader.open(file);
-    document.title = meta.title + ' — Epub Reader';
+    bookTitle = meta.title;
+    applyDocTitle();
     buildToc(meta.toc);
   } catch (e) {
     showError('书籍解析失败：' + e.message);
@@ -149,6 +167,7 @@ function loadSettingsUI() {
   letterSpacingSlider.value = settings.letterSpacing;
   letterSpacingVal.textContent = settings.letterSpacing;
   fontFamilySelect.value = settings.fontFamily;
+  titleModeSelect.value = settings.titleMode;
   document.querySelectorAll('[data-theme]').forEach(b => {
     b.classList.toggle('active', b.dataset.theme === settings.theme);
   });
@@ -162,7 +181,7 @@ async function updateSettings(patch) {
 }
 
 function setupUI() {
-  initNoteSaver(() => document.title.replace(/ — Epub Reader$/, '').trim());
+  initNoteSaver(() => bookTitle.trim());
 
   btnBack.addEventListener('click', async () => {
     await saveNow();
@@ -207,6 +226,12 @@ function setupUI() {
 
   fontFamilySelect.addEventListener('change', () => {
     updateSettings({ fontFamily: fontFamilySelect.value });
+  });
+
+  titleModeSelect.addEventListener('change', () => {
+    settings.titleMode = titleModeSelect.value;
+    SettingsStore.set({ titleMode: titleModeSelect.value });
+    applyDocTitle();
   });
 
   themeSwatches.addEventListener('click', (e) => {
